@@ -1,0 +1,16 @@
+// common storyboard styles
+
+#infographic {
+  width:percentage(10/12);
+  margin:auto;
+}
+
+@for $i from 1 through 3 {
+
+  #act_#{$i} {
+
+  }
+
+}
+
+// specific storyboard styles

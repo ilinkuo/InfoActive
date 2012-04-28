@@ -1,0 +1,27 @@
+// font stack
+$main: 'Antique Olive', sans-serif;
+$emph: serif;
+
+// scale 1.00 1.25 1.50 1.75 2.00
+$base: 1em;
+
+// common
+
+section {
+  font-family:$main;
+}
+
+
+// specific
+
+#act_1 .scene_1 {
+
+  h1 {
+    font-size:2em;
+  }
+
+  h2 {
+    font-size:1.75em;
+  }
+
+}
