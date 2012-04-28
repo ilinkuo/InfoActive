@@ -1,0 +1,12 @@
+// common styles
+
+canvas {
+  border:1px solid black;
+
+  @for $i from 1 through 3 {
+    .scene_#{$i} {
+
+    }
+  }
+
+}
