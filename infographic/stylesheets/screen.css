@@ -67,7 +67,7 @@ article, aside, details, figcaption, figure, footer, header, hgroup, menu, nav, 
   display: block;
 }
 
-/* line 8, ../sass/screen.scss */
+/* line 9, ../sass/screen.scss */
 html, body {
   max-width: 100%;
   margin: 0;
@@ -79,9 +79,12 @@ html, body {
   margin: auto;
 }
 
-/* line 3, ../sass/_canvas.scss */
-canvas {
+/* line 14, ../sass/_canvas.scss */
+img {
+  width: 48%;
   border: 1px solid black;
+  display: inline;
+  float: left;
 }
 
 /* line 10, ../sass/_typo.scss */
@@ -89,11 +92,86 @@ section {
   font-family: "Antique Olive", sans-serif;
 }
 
-/* line 19, ../sass/_typo.scss */
-#act_1 .scene_1 h1 {
+/* line 15, ../sass/_typo.scss */
+h1 {
   font-size: 2em;
 }
-/* line 23, ../sass/_typo.scss */
-#act_1 .scene_1 h2 {
+/* line 19, ../sass/_typo.scss */
+.scene_1 h1 {
+  color: yellow;
+}
+/* line 19, ../sass/_typo.scss */
+.scene_2 h1 {
+  color: yellow;
+}
+/* line 19, ../sass/_typo.scss */
+.scene_3 h1 {
+  color: yellow;
+}
+/* line 19, ../sass/_typo.scss */
+.scene_4 h1 {
+  color: yellow;
+}
+
+/* line 25, ../sass/_typo.scss */
+h2 {
   font-size: 1.75em;
+}
+/* line 29, ../sass/_typo.scss */
+.scene_1 h2 {
+  color: yellow;
+}
+/* line 29, ../sass/_typo.scss */
+.scene_2 h2 {
+  color: yellow;
+}
+/* line 29, ../sass/_typo.scss */
+.scene_3 h2 {
+  color: yellow;
+}
+/* line 29, ../sass/_typo.scss */
+.scene_4 h2 {
+  color: yellow;
+}
+
+/* line 35, ../sass/_typo.scss */
+p {
+  font-size: 1em;
+}
+/* line 39, ../sass/_typo.scss */
+.scene_1 p {
+  color: gray;
+}
+/* line 39, ../sass/_typo.scss */
+.scene_2 p {
+  color: gray;
+}
+/* line 39, ../sass/_typo.scss */
+.scene_3 p {
+  color: gray;
+}
+/* line 39, ../sass/_typo.scss */
+.scene_4 p {
+  color: gray;
+}
+
+/* line 45, ../sass/_typo.scss */
+em {
+  font-size: 1.1em;
+}
+/* line 49, ../sass/_typo.scss */
+.scene_1 em {
+  color: gray;
+}
+/* line 49, ../sass/_typo.scss */
+.scene_2 em {
+  color: gray;
+}
+/* line 49, ../sass/_typo.scss */
+.scene_3 em {
+  color: gray;
+}
+/* line 49, ../sass/_typo.scss */
+.scene_4 em {
+  color: gray;
 }

@@ -12,16 +12,42 @@ section {
 }
 
 
-// specific
+h1 {
+  font-size:2em;
 
-#act_1 .scene_1 {
-
-  h1 {
-    font-size:2em;
+  @for $i from 1 through 4 {
+    .scene_#{$i} & {
+      color:yellow;
+    }
   }
+}
 
-  h2 {
-    font-size:1.75em;
+h2 {
+  font-size:1.75em;
+
+  @for $i from  1 through 4 {
+    .scene_#{$i} & {
+      color:yellow;
+    }
   }
+}
 
+p {
+  font-size:1em;
+
+  @for $i from  1 through 4 {
+    .scene_#{$i} & {
+      color:gray;
+    }
+  }
+}
+
+em {
+  font-size:1.1em;
+
+  @for $i from  1 through 4 {
+    .scene_#{$i} & {
+      color:gray;
+    }
+  }
 }
