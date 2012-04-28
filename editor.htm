@@ -1,18 +1,130 @@
+<!DOCTYPE html>
 <html>
 <head>
+	<title>InfoActiv Editor Demo</title>
 
+	<style>
+		.floatright { float: right; }
+		.floatleft { float: left; }
+	</style>
+	<script src="js/jquery-1.7.2.js"></script>
+    <script type="text/javascript">
+		function draw() {
+			var context = getContext();
+         
+			var imageObj = new Image();
+ 
+			imageObj.onload = function() {
+				context.drawImage(imageObj,0,0);
+			};
+			
+			imageObj.src = "Screen_shot_walmart.png";
+		}
+       
+		window.onload = draw;
+		
+		function getContext(){
+			var canvas = document.getElementById("uploadedGraphic");
+			if (canvas.getContext) {
+				return canvas.getContext('2d');
+			}
+		}
+    </script>
+    <script type="text/javascript">
+    	function makeEdges(x,y){
+    		var context = getContext();
+    		var data = context.getImageData(x, y, 75, 75);
+            data = edge(data, context);
+            context.putImageData(data, x, y);
+    	}
+    
+    </script>
+    <script src="js/edgeDetection.js"></script>
+    <script>
+    // snippet obtained from http://stackoverflow.com/questions/1114465/getting-mouse-location-in-canvas
+    /*
+    	function getPosition(e) {
 
+    		//this section is from http://www.quirksmode.org/js/events_properties.html
+    		var targ;
+    		if (!e)
+        		e = window.event;
+    		if (e.target)
+        		targ = e.target;
+    		else if (e.srcElement)
+        		targ = e.srcElement;
+    		if (targ.nodeType == 3) // defeat Safari bug
+        		targ = targ.parentNode;
+
+	    	// jQuery normalizes the pageX and pageY
+    		// pageX,Y are the mouse positions relative to the document
+    		// offset() returns the position of the element relative to the document
+    		var x = e.pageX - $(targ).offset().left;
+    		var y = e.pageY - $(targ).offset().top;
+
+		    return {"x": x, "y": y};
+		};
+
+		// now just make sure you use this with jQuery
+		// obviously you can use other events other than click
+		
+		var elm = document.getElementById("uploadedGraphic");
+		$(elm).click(function(event) {
+			// jQuery would normalize the event
+			position = getPosition(event);
+			//now you can use the x and y positions
+			alert("X: " + position.x + " Y: " + position.y);
+		});
+		*/
+    </script>
+    
+	<script type="text/javascript">
+
+      document.addEventListener("DOMContentLoaded", init, false);
+
+      function init()
+      {
+        var canvas = document.getElementById("uploadedGraphic");
+        canvas.addEventListener("mousedown", getPosition, false);
+      }
+
+      function getPosition(event)
+      {
+        var x = new Number();
+        var y = new Number();
+        var canvas = document.getElementById("uploadedGraphic");
+
+        if (event.x != undefined && event.y != undefined)
+        {
+          x = event.x;
+          y = event.y;
+        }
+        else // Firefox method to get the position
+        {
+          x = event.clientX + document.body.scrollLeft +
+              document.documentElement.scrollLeft;
+          y = event.clientY + document.body.scrollTop +
+              document.documentElement.scrollTop;
+        }
+
+        x -= canvas.offsetLeft;
+        y -= canvas.offsetTop;
+
+		makeEdges(x,y);
+        //alert("x: " + x + "  y: " + y);
+      }
+
+    </script>
 </head>
 <body>
 	<div>
-
+		<h3>InfoActiv Editor</h3>
 	</div>
-
-    <div>
-    	<img src="Screen_shot_walmart.png"/>
-        <span id="displayCell"></span>&nbsp;<canvas id="my_canvas"></canvas>            			
+	<div id="toolBar">
+		<img src="toolBar.png" class="floatLeft"/>
+    	<canvas id="uploadedGraphic" width="600" height="400" class="floatRight"></canvas>          			
     </div>
-
+    <input type="button" onClick="makeEdges()" value="test"/>
 
 
 
