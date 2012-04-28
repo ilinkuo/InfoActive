@@ -135,6 +135,10 @@ function edge(input, context) {
         outputData[++bottom] = inputData[bottom];
         outputData[++bottom] = inputData[bottom];
     }*/
-    return output;
+    return {data: output, 
+    		color: {r: baseR, 
+    				g: baseG, 
+    				b: baseB}
+    		};
 }
 

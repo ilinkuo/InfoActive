@@ -31,13 +31,41 @@
 		}
     </script>
     <script type="text/javascript">
+    	var regions = [];
     	function makeEdges(x,y){
     		var context = getContext();
     		var data = context.getImageData(x - 50, y - 50, 100, 100);
-            data = edge(data, context);
-            context.putImageData(data, x-50 , y-50);
+            var result = edge(data, context);
+            context.putImageData(result.data, x-50 , y-50);
+            
+            regions.push({
+            				bbox: [(x-50), (y-50), (x+50), (y+50)], 
+            				color: result.color
+            			});		
     	}
     
+    	function showRegionCount(){
+    		alert(regions.length);
+    	}
+    	
+    	function displayRegionMessage(x,y){
+    		for (var i=0; i<regions.length; i++){
+    			if ( inBox(regions[i], x, y)){
+    				alert(" in region " + i + ":x=" + x + " y=" + y );
+    			}
+    		}
+    	}
+    	
+    	function inBox(region, x, y){
+    		return (x > region.bbox[0]) 
+    			&& (x < region.bbox[2]) 
+    			&& (y > region.bbox[1])
+    			&& (y < region.bbox[3]);
+    	}
+    	
+    	function displayBBox(bbox){
+    		//return "x: (" + bbox[0] + "," + bbox[1] + ") y:(" + bbox[
+    	}
     </script>
     <script src="js/edgeDetection.js"></script>
     <script>
@@ -109,12 +137,21 @@
 
         x -= canvas.offsetLeft;
         y -= canvas.offsetTop;
-
-		makeEdges(x,y);
+		if (mode == 1) { // edit mode
+			makeEdges(x,y);
+		} else {
+			displayRegionMessage(x,y);
+		}
         //alert("x: " + x + "  y: " + y);
       }
-
+      
+      
+		var mode = 1; // edit
+		function toggleMode(){
+			mode = -mode;
+		}
     </script>
+
 </head>
 <body>
 	<div>
@@ -125,6 +162,8 @@
     	<canvas id="uploadedGraphic" width="600" height="400" class="floatRight"></canvas>          			
     </div>
     <input type="button" onClick="makeEdges()" value="test"/>
+    <input type="button" onClick="showRegionCount()" value="count regions"/>
+    <input type="button" onClick="toggleMode()" value="switch mode"/>
 
 
 
