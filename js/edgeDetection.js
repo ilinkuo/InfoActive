@@ -4,6 +4,7 @@
 */
 function edge(input, context) {
     var w = input.width, h = input.height;
+    //alert("width=" + w + " height=" + h);
     var output = context.createImageData(w, h);
     var inputData = input.data;
     var outputData = output.data;
@@ -11,6 +12,20 @@ function edge(input, context) {
     var pixel = bytesPerRow + 4; // Start at (1,1)
     var hm1 = h - 1;
     var wm1 = w - 1;
+    {
+    	var center = (w - w % 2) /2 + ((h - h % 2) / 2) * w;
+    	var center_pixel = center * 4;
+    	//alert("w=" + w + " h=" + h + "center_pixel=" + 	center_pixel);
+    	var baseR = inputData[center_pixel + 0];
+    	var baseG = inputData[center_pixel + 1];
+    	var baseB = inputData[center_pixel + 2];
+    	var hilR = baseR + 65;
+    	var hilG = baseG + 65;
+    	var hilB = baseB;
+    	//alert("center_pixel=" + center_pixel + " mod=" + (center_pixel % 4) + " r=" + baseR + " g=" + baseG + " b=" + baseB);
+    	//alert("r=" + baseR + "; g=" + baseG + "; b=" + baseB + " " + Math.abs(-9));
+    }
+    
     for (var y = 1; y < hm1; ++y) {
         // Prepare initial cached values for current row
 
@@ -67,15 +82,34 @@ function edge(input, context) {
             r2 = rp + rc + rn;
             g2 = gp + gc + gn;
             b2 = bp + bc + bn;
-
+            
+            var rin = inputData[pixel]
+            var gin = inputData[pixel+1];
+            var bin = inputData[pixel+2];
+            var dif = Math.abs(rin - baseR) + Math.abs(gin - baseG) + Math.abs(bin - baseB);
+            if (dif < 36) {
+            	outputData[pixel] = hilR;
+            	outputData[++pixel] = hilG;
+            	outputData[++pixel] = hilB;
+            	outputData[++pixel] = 255; 
+            } else {
+            	outputData[pixel] = rin;
+            	outputData[++pixel] = gin;
+            	outputData[++pixel] = bin;
+            	outputData[++pixel] = 255;
+            }
+            
+/*
             outputData[pixel] = r - r2;
             outputData[++pixel] = g - g2;
             outputData[++pixel] = b - b2;
             outputData[++pixel] = 255; // alpha
+            */
             ++pixel;
         }
         pixel += 8;
     }
+    //alert("pixels=" + pixel);
     /*
     var base = -1;
     for (var y = 0; y < h; ++y) {
