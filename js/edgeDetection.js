@@ -13,16 +13,16 @@ function edge(input, context) {
     var hm1 = h - 1;
     var wm1 = w - 1;
     {
-    	var center = (w - w % 2) /2 + ((h - h % 2) / 2) * w;
-    	var center_pixel = center * 4;
+    	var center_pixel = findCenter(w,h) ;
     	//alert("w=" + w + " h=" + h + "center_pixel=" + 	center_pixel);
     	var baseR = inputData[center_pixel + 0];
     	var baseG = inputData[center_pixel + 1];
     	var baseB = inputData[center_pixel + 2];
-    	var hilR = baseR + 65;
-    	var hilG = baseG + 65;
-    	var hilB = baseB;
-    	//alert("center_pixel=" + center_pixel + " mod=" + (center_pixel % 4) + " r=" + baseR + " g=" + baseG + " b=" + baseB);
+    	var baseColor = new Color(baseR, baseG, baseB);
+    	var hilightColor = adjustColor(baseColor, hilightAdjustmemnt)
+
+    	//alert("center_pixel=" + center_pixel + " mod=" + oldFindCenterPixel(w,h) + " r=" + baseR + " g=" + baseG + " b=" + baseB);
+
     	//alert("r=" + baseR + "; g=" + baseG + "; b=" + baseB + " " + Math.abs(-9));
     }
     
@@ -88,9 +88,9 @@ function edge(input, context) {
             var bin = inputData[pixel+2];
             var dif = Math.abs(rin - baseR) + Math.abs(gin - baseG) + Math.abs(bin - baseB);
             if (dif < 36) {
-            	outputData[pixel] = hilR;
-            	outputData[++pixel] = hilG;
-            	outputData[++pixel] = hilB;
+            	outputData[pixel] = hilightColor.r;
+            	outputData[++pixel] = hilightColor.g;
+            	outputData[++pixel] = hilightColor.b;
             	outputData[++pixel] = 255; 
             } else {
             	outputData[pixel] = rin;
@@ -110,35 +110,36 @@ function edge(input, context) {
         pixel += 8;
     }
     //alert("pixels=" + pixel);
-    /*
-    var base = -1;
-    for (var y = 0; y < h; ++y) {
-        outputData[++base] = inputData[base];
-        outputData[++base] = inputData[base];
-        outputData[++base] = inputData[base];
-        outputData[++base] = inputData[base];
-        base += w * 4 - 8;
-        outputData[++base] = inputData[base];
-        outputData[++base] = inputData[base];
-        outputData[++base] = inputData[base];
-        outputData[++base] = inputData[base];
-    }
-    var top = -1;
-    var bottom = -1 + w * (h - 1) * 4;
-    for (var x = 0; x < w; x++) {
-        outputData[++top] = inputData[top];
-        outputData[++top] = inputData[top];
-        outputData[++top] = inputData[top];
-        outputData[++top] = inputData[top];
-        outputData[++bottom] = inputData[bottom];
-        outputData[++bottom] = inputData[bottom];
-        outputData[++bottom] = inputData[bottom];
-        outputData[++bottom] = inputData[bottom];
-    }*/
+
     return {data: output, 
-    		color: {r: baseR, 
-    				g: baseG, 
-    				b: baseB}
-    		};
+    		color: new Color( baseR, baseG, baseB),
+    		adjustedColor: hilightColor
+    		}; 
 }
+
+var hilightAdjustmemnt = {r: 45, g: 45, b: 0}
+
+function adjustColor(original, adjustment){
+	return {
+		r: (original.r + adjustment.r) % 255,
+		g: (original.g + adjustment.g) % 255,
+		b: (original.b + adjustment.b) % 255
+	}
+}
+
+function Color(r,g,b){
+	this.r = r; this.g = g, this.b = b;
+}
+
+
+function findPixel(x,y,w,h){
+	return (x + y*h) * 4;
+}
+
+function findCenter(w,h){
+	return findPixel( (w - w % 2) /2, (h - h % 2) / 2, w,h);
+}
+
+
+
 

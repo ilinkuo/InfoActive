@@ -25,8 +25,13 @@
 		
 		function getContext(){
 			var canvas = document.getElementById("uploadedGraphic");
+			// set globals
+			canvasWidth = canvas.width;
+			canvasHeight = canvas.height;
 			if (canvas.getContext) {
 				return canvas.getContext('2d');
+			} else {
+				alert("uhoh");
 			}
 		}
     </script>
@@ -37,10 +42,12 @@
     		var data = context.getImageData(x - 50, y - 50, 100, 100);
             var result = edge(data, context);
             context.putImageData(result.data, x-50 , y-50);
-            
+            var message = prompt("Please enter rollover text", "text");
             regions.push({
             				bbox: [(x-50), (y-50), (x+50), (y+50)], 
-            				color: result.color
+            				color: result.color,
+            				adjustedColor: result.adjustedColor,
+            				message: message
             			});		
     	}
     
@@ -48,23 +55,56 @@
     		alert(regions.length);
     	}
     	
-    	function displayRegionMessage(x,y){
+    	function displayRegionMessage(x,y){	
     		for (var i=0; i<regions.length; i++){
-    			if ( inBox(regions[i], x, y)){
-    				alert(" in region " + i + ":x=" + x + " y=" + y );
+    			var region = regions[i];
+    			if ( inBox(region, x, y)){
+    				alert(region.message);
+    				return;
     			}
     		}
     	}
     	
     	function inBox(region, x, y){
-    		return (x > region.bbox[0]) 
+
+    		var inbox = (x > region.bbox[0]) 
     			&& (x < region.bbox[2]) 
     			&& (y > region.bbox[1])
     			&& (y < region.bbox[3]);
+    		if (!inbox) return false;
+    		if (mode == 0){ // edit mode
+    			// do nothing
+    		} else if ( mode == 1){ // preview mode
+    			var xyColor = getRGB(x,y);
+    			//alert("color at (" + x + "," + y + ") is r=" + xyColor.r + " g=" + xyColor.g + " b=" + xyColor.b);
+    			if (isApproxColor(region.adjustedColor, xyColor)){
+    				return true;
+    			}
+    		} else { // run mode
+    			var xyColor = getRGB(x,y);
+    			if (isApproxColor(region.color, xyColor)){
+    				return true;
+    			} 
+    		}
+    		
     	}
     	
-    	function displayBBox(bbox){
-    		//return "x: (" + bbox[0] + "," + bbox[1] + ") y:(" + bbox[
+    	function isApproxColor(c1, c2){
+    		var diff = Math.abs(c1.r - c2.r) + Math.abs(c1.g - c2.g) + Math.abs(c1.b - c2.b);
+    		return (diff < 30);
+    	}
+    	
+    	function displayColor(color){
+    		return " {r=" + color.r + " g=" + color.g + " b=" + color.b + "}";
+    	}
+    	
+    	function getRGB(x,y){
+    		var context = getContext();
+			var w = canvasWidth;
+			var h = canvasHeight;
+			var data = context.getImageData(x,y,1,1).data;
+			var color = new Color(data[0], data[1], data[2]);
+			return color;			
     	}
     </script>
     <script src="js/edgeDetection.js"></script>
@@ -110,10 +150,17 @@
 
       document.addEventListener("DOMContentLoaded", init, false);
 
+		var originalData; // global
       function init()
       {
         var canvas = document.getElementById("uploadedGraphic");
         canvas.addEventListener("mousedown", getPosition, false);
+      }
+      
+      function restore(){
+      	var context = getContext();
+      	draw();
+      	setMode(2); // run
       }
 
       function getPosition(event)
@@ -137,8 +184,9 @@
 
         x -= canvas.offsetLeft;
         y -= canvas.offsetTop;
-		if (mode == 1) { // edit mode
+		if (mode == 0) { // edit mode
 			makeEdges(x,y);
+
 		} else {
 			displayRegionMessage(x,y);
 		}
@@ -146,9 +194,9 @@
       }
       
       
-		var mode = 1; // edit
-		function toggleMode(){
-			mode = -mode;
+		var mode = 0; // edit=0 preview=1 run=2
+		function setMode(value){
+			mode = value;
 		}
     </script>
 
@@ -161,9 +209,10 @@
 		<img src="toolBar.png" class="floatLeft"/>
     	<canvas id="uploadedGraphic" width="600" height="400" class="floatRight"></canvas>          			
     </div>
-    <input type="button" onClick="makeEdges()" value="test"/>
-    <input type="button" onClick="showRegionCount()" value="count regions"/>
-    <input type="button" onClick="toggleMode()" value="switch mode"/>
+
+    <input type="button" onClick="setMode(0)" value="edit"/>
+    <input type="button" onClick="setMode(1)" value="preview"/>
+    <input type="button" onClick="restore()" value="run"/>
 
 
 
