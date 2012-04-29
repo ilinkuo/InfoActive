@@ -1,12 +1,28 @@
 // common styles
 
-canvas {
+//canvas {
+ // border:1px solid black;
+
+ // @for $i from 1 through 3 {
+ //   .scene_#{$i} {
+
+ //   }
+ // }
+
+ //}
+
+img {
+  width:48%;
   border:1px solid black;
+  @include float(left);
+  .actor & {
 
-  @for $i from 1 through 3 {
-    .scene_#{$i} {
-
-    }
   }
+
+
+  .data & {
+
+  }
+
 
 }
